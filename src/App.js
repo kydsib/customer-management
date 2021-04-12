@@ -1,5 +1,13 @@
+import GlobalStyles from './theme/global'
+import LandingPage from './pages/LandingPage/LandingPage'
+
 function App() {
-	return <div>Initial commit</div>
+	return (
+		<div>
+			<GlobalStyles />
+			<LandingPage />
+		</div>
+	)
 }
 
 export default App
