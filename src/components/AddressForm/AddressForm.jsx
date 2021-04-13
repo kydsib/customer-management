@@ -3,12 +3,18 @@ import React, { useState } from 'react'
 import TextInput from '../TextInput/TextInput'
 import CustomButton from '../CustomButton/CustomButton'
 import useForm from '../../hooks/useFrom'
+import useGeocode from '../../hooks/useGeocode'
 
 const AddressForm = () => {
 	// using form works for value update, but component UsersList wont rerender
 	// But there might be no need for that. Because it will be shown only when buton will be pressed
 	// this would solve pro drilling problem
-	const { handleChange, handleSubmit } = useForm()
+	const { handleChange, handleSubmit, error, errorMessage } = useForm()
+	let errorMsg = error ? errorMessage : ''
+
+	const ddata = { nake: 'jonas' }
+	const { isLoading } = useGeocode(ddata)
+	console.log(isLoading)
 
 	return (
 		<form onSubmit={handleSubmit}>
@@ -26,6 +32,8 @@ const AddressForm = () => {
 				placeHolder="email@example.com"
 				label="Email"
 				name="email"
+				error={error}
+				helperText={errorMsg}
 				inputProps={{
 					'data-testid': 'email',
 				}}
@@ -41,22 +49,33 @@ const AddressForm = () => {
 			/>
 			<TextInput
 				handleChange={handleChange}
-				placeHolder="Housen No"
-				label="houseNo"
-				name="houseNo"
+				placeHolder="Street"
+				label="Street"
+				name="street"
+				inputProps={{
+					'data-testid': 'street',
+				}}
 			/>
 			<TextInput
 				handleChange={handleChange}
-				placeHolder="Zip code"
-				label="zip"
-				name="zip"
-			/>
-			<CustomButton
-				children="SUBMIT"
+				placeHolder="House Number"
+				label="houseNo"
+				name="houseNo"
 				inputProps={{
-					'data-testid': 'btn-submit',
+					'data-testid': 'houseNo',
 				}}
 			/>
+			<TextInput
+				handleChange={handleChange}
+				placeHolder="Zip / Postal code"
+				label="zip"
+				name="zip"
+				inputProps={{
+					'data-testid': 'zip',
+				}}
+			/>
+
+			<CustomButton children="SUBMIT" />
 		</form>
 	)
 }

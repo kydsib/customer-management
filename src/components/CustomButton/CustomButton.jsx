@@ -6,9 +6,11 @@ const CustomButton = ({
 	color = 'primary',
 	variant = 'contained',
 	type = 'submit',
+	handleClick,
 }) => {
 	return (
 		<Button
+			onClick={handleClick}
 			variant={variant}
 			color={color}
 			children={children}
