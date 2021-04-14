@@ -9,9 +9,9 @@ const useGeocode = ({ address }) => {
 	useEffect(() => {
 		// TODO decide where and when API should be called
 		// TODO extract values from address
-		const fullAddress = 'Gedimino pr. 9, Vilnius, LT231234'
+		const fullAddress = 'Gedimiminaiciu 911 Vilnijus LT231234'
 		// extract values form addres to one sring
-		const MY_API_KEY = 'notProvided'
+		const MY_API_KEY = 'AIzaSyBomrmX0kILUditS9QOlF5nNOYce-es4n4'
 
 		async function getAdressApproval() {
 			setIsLoading(true)
