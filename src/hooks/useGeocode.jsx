@@ -11,7 +11,7 @@ const useGeocode = ({ address }) => {
 		// TODO extract values from address
 		const fullAddress = 'Gedimiminaiciu 911 Vilnijus LT231234'
 		// extract values form addres to one sring
-		const MY_API_KEY = 'AIzaSyBomrmX0kILUditS9QOlF5nNOYce-es4n4'
+		const MY_API_KEY = ''
 
 		async function getAdressApproval() {
 			setIsLoading(true)
