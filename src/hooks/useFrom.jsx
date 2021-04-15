@@ -1,23 +1,35 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
-// import useGeocode from './useGeocode'
+import useGeocode from './useGeocode'
 
 const defaultValues = {
-	city: '',
-	email: '',
-	fullName: '',
-	houseNo: '',
 	id: '',
+	fullName: '',
+	email: '',
+	city: '',
 	street: '',
+	houseNo: '',
 	zip: '',
 }
 
 const useForm = () => {
 	const [newUser, setNewUser] = useState(defaultValues)
-	// do I need error at all or error message is enough?
-	const [error, setError] = useState(false)
+
+	// this one is for switching from user list to form window
+	const [showFormWindow, setShowFormWindow] = useState(true)
 	const [errorMessage, setErrorMessage] = useState('')
+	const [error, setError] = useState(false)
 	const [validUsers, setValidUsers] = useState([])
+	const [addressObj, setAddressObj] = useState()
+
+	// Should I wrapp geocode to useCallback?
+	const { apiError, isLoading, isAddressValid, addressErrorMsg } = useGeocode(
+		addressObj
+	)
+
+	useEffect(() => {
+		setErrorMessage(addressErrorMsg)
+	}, [apiError, isAddressValid, addressErrorMsg, isLoading])
 
 	function getValueFromLS(key) {
 		const storage = localStorage.getItem(key)
@@ -56,6 +68,15 @@ const useForm = () => {
 		})
 	}
 
+	function handleEditClick(id) {
+		console.log(`edit is clicked`)
+		const editingThisUser = validUsers.filter((user) => user.id === id)[0]
+		// TODO figure how to transfer user that is being edited data back to user form
+		setShowFormWindow(true)
+
+		setNewUser(editingThisUser)
+	}
+
 	function isEmailOriginal() {
 		const duplicate = validUsers.filter(
 			(item) => item.email === newUser.email
@@ -79,7 +100,13 @@ const useForm = () => {
 			return
 		}
 
+		const { id, fullName, email, ...addresObj } = newUser
+
+		// this will triger geocode API call
+		setAddressObj(addresObj)
+
 		if (newUser.email !== undefined) {
+			console.log(`submit and reset ran`)
 			let oldValues = [...validUsers]
 			setError(false)
 			setErrorMessage('')
@@ -99,6 +126,10 @@ const useForm = () => {
 		error,
 		errorMessage,
 		newUser,
+		isLoading,
+		// testing editing
+		handleEditClick,
+		showFormWindow,
 	}
 }
 

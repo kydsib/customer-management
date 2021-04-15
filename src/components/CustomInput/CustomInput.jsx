@@ -1,7 +1,7 @@
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
 
-const TextInput = ({
+const CustomInput = ({
 	variant = 'outlined',
 	label,
 	required = true,
@@ -31,4 +31,4 @@ const TextInput = ({
 	)
 }
 
-export default TextInput
+export default CustomInput

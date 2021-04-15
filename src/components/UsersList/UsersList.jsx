@@ -1,15 +1,31 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import { makeStyles } from '@material-ui/core/styles'
 
 import useForm from '../../hooks/useFrom'
+import UserDataCard from '../UserDataCard/UserDataCard'
 
-const UsersList = ({ users }) => {
+const UsersList = () => {
+	const { validUsers } = useForm()
+	const classes = useStyles()
+
 	return (
-		<ul>
-			{users
-				? users.map((user) => <li key={user.id}>{user.fullName}</li>)
+		<Grid key="container" container spacing={2} className={classes.root}>
+			{validUsers
+				? validUsers.map((user) => (
+						<Grid key={user.id} item lg={3} md={4} sm={6} xs={12}>
+							<UserDataCard user={user} />
+						</Grid>
+				  ))
 				: null}
-		</ul>
+		</Grid>
 	)
 }
 
 export default UsersList
+
+const useStyles = makeStyles(() => ({
+	root: {
+		flexGrow: 1,
+	},
+}))
