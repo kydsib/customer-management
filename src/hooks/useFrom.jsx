@@ -12,20 +12,38 @@ const defaultValues = {
 	zip: '',
 }
 
-const useForm = () => {
-	const [newUser, setNewUser] = useState(defaultValues)
-
-	// this one is for switching from user list to form window
-	const [showFormWindow, setShowFormWindow] = useState(true)
+const useForm = (data) => {
+	const newUserValues = data ? data : defaultValues
+	const [newUser, setNewUser] = useState(newUserValues)
 	const [errorMessage, setErrorMessage] = useState('')
 	const [error, setError] = useState(false)
 	const [validUsers, setValidUsers] = useState([])
 	const [addressObj, setAddressObj] = useState()
 
-	// Should I wrapp geocode to useCallback?
 	const { apiError, isLoading, isAddressValid, addressErrorMsg } = useGeocode(
 		addressObj
 	)
+
+	useEffect(() => {
+		// newUser.id !== '' prevents empty object being stored
+		if (isAddressValid && newUser.id !== '') {
+			const dataFromLs = JSON.parse(localStorage.getItem('address'))
+			const currentData = dataFromLs ? dataFromLs : []
+			const withoutCurrentEdit = currentData.filter(
+				(user) => user.id !== newUser.id
+			)
+
+			withoutCurrentEdit.push(newUser)
+			setValidUsers(withoutCurrentEdit)
+
+			localStorage.setItem('address', JSON.stringify(withoutCurrentEdit))
+			setError(false)
+
+			setNewUser(defaultValues)
+			// this triggers useGeocode and resets isAddressValid to false
+			setAddressObj(defaultValues)
+		}
+	}, [isAddressValid, addressObj, newUser])
 
 	useEffect(() => {
 		setErrorMessage(addressErrorMsg)
@@ -54,27 +72,24 @@ const useForm = () => {
 	function handleChange(event) {
 		const { name, value } = event.target
 
-		// resetting the error msg for email field
 		if (name === 'email') {
 			setError(false)
 			setErrorMessage('')
 		}
 
-		setNewUser({
-			...newUser,
-			// generating kind a random id
-			id: new Date().valueOf(),
-			[name]: value,
-		})
-	}
-
-	function handleEditClick(id) {
-		console.log(`edit is clicked`)
-		const editingThisUser = validUsers.filter((user) => user.id === id)[0]
-		// TODO figure how to transfer user that is being edited data back to user form
-		setShowFormWindow(true)
-
-		setNewUser(editingThisUser)
+		if (newUser.id) {
+			// if data is being edited, id remains the same
+			setNewUser({
+				...newUser,
+				[name]: value,
+			})
+		} else {
+			setNewUser({
+				...newUser,
+				id: new Date().valueOf(),
+				[name]: value,
+			})
+		}
 	}
 
 	function isEmailOriginal() {
@@ -89,7 +104,8 @@ const useForm = () => {
 	function handleSubmit(event) {
 		event.preventDefault()
 
-		if (!isEmailOriginal()) {
+		// !data lets us save user with same email when editing existing user
+		if (!isEmailOriginal() && !data) {
 			setError(true)
 			setErrorMessage('This email is already taken')
 			return
@@ -104,19 +120,6 @@ const useForm = () => {
 
 		// this will triger geocode API call
 		setAddressObj(addresObj)
-
-		if (newUser.email !== undefined) {
-			console.log(`submit and reset ran`)
-			let oldValues = [...validUsers]
-			setError(false)
-			setErrorMessage('')
-
-			oldValues.push(newUser)
-			setValidUsers(oldValues)
-
-			localStorage.setItem('address', JSON.stringify(oldValues))
-			setNewUser(defaultValues)
-		}
 	}
 
 	return {
@@ -127,9 +130,6 @@ const useForm = () => {
 		errorMessage,
 		newUser,
 		isLoading,
-		// testing editing
-		handleEditClick,
-		showFormWindow,
 	}
 }
 

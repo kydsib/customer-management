@@ -1,28 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import AddressForm from '../../components/AddressForm/AddressForm'
 import UsersList from '../../components/UsersList/UsersList'
-import useForm from '../../hooks/useFrom'
 import CustomButton from '../../components/CustomButton/CustomButton'
 
 const LandingPage = () => {
-	// need to figure how switch between address and user list
-	const { showFormWindow } = useForm()
-	const [state, setState] = useState(showFormWindow)
+	const [state, setState] = useState(true)
+	const [editingUser, setEditingUser] = useState()
 
-	const btnText = state ? 'Show List' : 'Enter New User'
+	function handleUserEdit(data) {
+		setEditingUser(data)
 
-	useEffect(() => {
-		console.log(`${showFormWindow} changed in landingPage`)
-	}, [showFormWindow])
+		setState((prev) => !prev)
+	}
+
+	let btnText = state ? 'Show List' : 'Enter New User'
 
 	return (
 		<>
-			{state ? <AddressForm /> : <UsersList />}
+			{state ? (
+				<AddressForm data={editingUser} />
+			) : (
+				<UsersList handleEdit={handleUserEdit} /> // get data of user that is being edited
+			)}
 
 			<CustomButton
 				children={btnText}
-				handleClick={() => setState((prev) => !prev)}
+				inputProps={{
+					'data-testid': 'toggle',
+				}}
+				handleClick={() => {
+					setState((prev) => !prev)
+					setEditingUser(false)
+				}}
 			/>
 		</>
 	)

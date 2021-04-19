@@ -7,7 +7,8 @@ import useForm from '../../hooks/useFrom'
 
 import Spinner from '../Spinner/Spinner'
 
-const AddressForm = () => {
+// data is user that is being edited
+const AddressForm = ({ data }) => {
 	const {
 		handleChange,
 		handleSubmit,
@@ -15,7 +16,7 @@ const AddressForm = () => {
 		errorMessage,
 		newUser,
 		isLoading,
-	} = useForm()
+	} = useForm(data)
 
 	let errorMsg = error ? errorMessage : ''
 
@@ -85,11 +86,12 @@ const AddressForm = () => {
 					}}
 				/>
 
-				<CustomButton children="SUBMIT" />
+				<CustomButton children="submit" />
 			</form>
 			{isLoading ? <Spinner /> : null}
+
 			{errorMessage ? (
-				<Alert severity="info">{errorMessage}</Alert>
+				<Alert severity="warning">{errorMessage}</Alert>
 			) : null}
 		</>
 	)

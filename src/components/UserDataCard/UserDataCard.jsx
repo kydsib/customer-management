@@ -11,13 +11,10 @@ import HomeIcon from '@material-ui/icons/Home'
 import LocationCityIcon from '@material-ui/icons/LocationCity'
 import EditIcon from '@material-ui/icons/Edit'
 
-import useForm from '../../hooks/useFrom'
-
-export default function UserDataCard({ user }) {
-	const { handleEditClick } = useForm()
+export default function UserDataCard({ user, handleEdit }) {
 	const classes = useStyles()
 
-	const { city, email, fullName, houseNo, street, zip, id } = user
+	const { city, email, fullName, houseNo, street, zip } = user
 
 	return (
 		<Card className={classes.root}>
@@ -26,7 +23,7 @@ export default function UserDataCard({ user }) {
 				subheader={email}
 				action={
 					<IconButton
-						onClick={() => handleEditClick(id)}
+						onClick={() => handleEdit(user)}
 						aria-label="edit"
 					>
 						<EditIcon />
@@ -35,18 +32,16 @@ export default function UserDataCard({ user }) {
 			/>
 
 			<CardContent>
-				<Typography variant="body2" color="textSecondary">
-					<ListItemIcon>
-						<LocationCityIcon />
-					</ListItemIcon>
-					<ListItemText primary={city} />
-				</Typography>
-				<Typography variant="body2" color="textSecondary">
-					<ListItemIcon>
-						<HomeIcon color="action" />
-					</ListItemIcon>
-					<ListItemText primary={`${street} ${houseNo} - ${zip}`} />
-				</Typography>
+				<ListItemIcon>
+					<LocationCityIcon />
+				</ListItemIcon>
+				<ListItemText primary={city} />
+				<Typography variant="body2" color="textSecondary"></Typography>
+				<ListItemIcon>
+					<HomeIcon color="action" />
+				</ListItemIcon>
+				<ListItemText primary={`${street} ${houseNo} - ${zip}`} />
+				<Typography variant="body2" color="textSecondary"></Typography>
 			</CardContent>
 		</Card>
 	)
