@@ -1,51 +1,90 @@
-import { render, screen } from '@testing-library/react'
+import {
+	render,
+	waitForElementToBeRemoved,
+	screen,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { rest } from 'msw'
 
 import AddressForm from '../AddressForm'
+import { server } from '../../../mocks/server'
 
-describe('<AddressFrom />', () => {
-	it('submiting the form calls onSubmit with newly entered values', () => {
-		// let submittedData
-		// how handleSubmit to know that it revieves values?
-		const handleSubmit = jest.fn()
-		render(<AddressForm onSumbit={handleSubmit} />)
+const nameAndSurname = 'New Name'
+const email = 'test@gmail.com'
+const city = 'Vilnius'
+const street = 'Kauno g.'
+const houseNo = '12'
+const zip = '03214'
 
-		const nameAndSurname = 'New Name'
-		const email = 'test@gmail.com'
-		const city = 'Vilnius'
-		const street = 'Konstitucijos pr'
-		const houseNo = '500'
-		const zip = 'LT01243'
+it('server error test', async () => {
+	const testErrorMessage = 'We found nothing'
+	server.use(
+		rest.get(
+			'https://maps.googleapis.com/maps/api/geocode/json',
+			async (req, res, ctx) => {
+				return res(
+					ctx.status(500),
+					ctx.json({ message: testErrorMessage })
+				)
+			}
+		)
+	)
 
-		userEvent.type(screen.getByTestId('nameInput'), nameAndSurname)
-		// userEvent.type(screen.getByTestId('email'), email)
-		// userEvent.type(screen.getByTestId('city', city))
-		// userEvent.type(screen.getByTestId('street', street))
-		// userEvent.type(screen.getByTestId('houseNo', houseNo))
-		// userEvent.type(screen.getByTestId('zip', zip))
+	render(<AddressForm />)
 
-		//
-		expect(screen.getByTestId('nameInput')).toHaveValue(nameAndSurname)
+	const nameInput = screen.getByTestId('nameInput')
+	const emailInput = screen.getByTestId('email')
+	const cityInput = screen.getByTestId('city')
+	const streetInput = screen.getByTestId('street')
+	const houseNoInput = screen.getByTestId('houseNo')
+	const zipInput = screen.getByTestId('zip')
 
-		// this one is not trigering submit in test
-		userEvent.click(screen.getByRole('button', { name: /submit/i }))
+	userEvent.type(nameInput, nameAndSurname)
+	userEvent.type(emailInput, email)
+	userEvent.type(cityInput, city)
+	userEvent.type(streetInput, street)
+	userEvent.type(houseNoInput, houseNo)
+	userEvent.type(zipInput, zip)
 
-		// Why handleSubmit is not fired?
-		// expect(handleSubmit).toHaveBeenCalledWith({
-		// 	nameAndSurname,
-		// 	email,
-		// 	city,
-		// 	street,
-		// 	houseNo,
-		// 	zip,
-		// })
+	userEvent.click(screen.getByRole('button', { name: /submit/i }))
+	const loader = screen.getByRole('progressbar')
+	expect(loader).toBeInTheDocument()
 
-		// expect(handleSubmit).toHaveBeenCalledTimes(1)
-	})
+	await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
+	expect(screen.getByText(testErrorMessage)).toBeInTheDocument()
+})
 
-	it('handles selected address from autofil feature', () => {})
+it('Submits correct address', async () => {
+	render(<AddressForm />)
 
-	it('checks if provided address is existant', () => {})
+	const nameInput = screen.getByTestId('nameInput')
+	const emailInput = screen.getByTestId('email')
+	const cityInput = screen.getByTestId('city')
+	const streetInput = screen.getByTestId('street')
+	const houseNoInput = screen.getByTestId('houseNo')
+	const zipInput = screen.getByTestId('zip')
 
-	it('submits correct addres and saves it in LocalStorage', () => {})
+	userEvent.type(nameInput, nameAndSurname)
+	userEvent.type(emailInput, email)
+	userEvent.type(cityInput, city)
+	userEvent.type(streetInput, street)
+	userEvent.type(houseNoInput, houseNo)
+	userEvent.type(zipInput, zip)
+
+	expect(nameInput).toHaveValue(nameAndSurname)
+	expect(emailInput).toHaveValue(email)
+	expect(cityInput).toHaveValue(city)
+	expect(streetInput).toHaveValue(street)
+	expect(houseNoInput).toHaveValue(houseNo)
+	expect(zipInput).toHaveValue(zip)
+
+	const submitBtn = screen.getByRole('button', { name: /submit/i })
+	userEvent.click(submitBtn)
+
+	const loader = screen.getByRole('progressbar')
+	expect(loader).toBeInTheDocument()
+
+	await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
+
+	expect(nameInput).toHaveValue('')
 })

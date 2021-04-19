@@ -9,11 +9,11 @@ import UserDataCard from '../UserDataCard/UserDataCard'
 const UsersList = ({ handleEdit }) => {
 	const { validUsers } = useForm()
 	const noUsers =
-		validUsers.length === 0 ? (
+		validUsers?.length === 0 ? (
 			<Alert severity="info">There are no users yet</Alert>
 		) : null
 	const classes = useStyles()
-
+	console.log(validUsers)
 	return (
 		<>
 			<Grid

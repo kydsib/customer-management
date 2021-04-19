@@ -20,7 +20,7 @@ const useForm = (data) => {
 	const [validUsers, setValidUsers] = useState([])
 	const [addressObj, setAddressObj] = useState()
 
-	const { apiError, isLoading, isAddressValid, addressErrorMsg } = useGeocode(
+	const { isLoading, isAddressValid, addressErrorMsg } = useGeocode(
 		addressObj
 	)
 
@@ -47,7 +47,7 @@ const useForm = (data) => {
 
 	useEffect(() => {
 		setErrorMessage(addressErrorMsg)
-	}, [apiError, isAddressValid, addressErrorMsg, isLoading])
+	}, [isAddressValid, addressErrorMsg, isLoading])
 
 	function getValueFromLS(key) {
 		const storage = localStorage.getItem(key)

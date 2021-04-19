@@ -20,6 +20,8 @@ const AddressForm = ({ data }) => {
 
 	let errorMsg = error ? errorMessage : ''
 
+	let errorForAlert = errorMessage ? errorMessage : ''
+
 	return (
 		<>
 			<form onSubmit={handleSubmit} autoComplete="off">
@@ -91,7 +93,7 @@ const AddressForm = ({ data }) => {
 			{isLoading ? <Spinner /> : null}
 
 			{errorMessage ? (
-				<Alert severity="warning">{errorMessage}</Alert>
+				<Alert severity="warning">{errorForAlert}</Alert>
 			) : null}
 		</>
 	)

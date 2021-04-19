@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 
 import LandingPage from '../LandingPage'
 
-it('Pressing button toggles betwen userForm and userList pages, shows message when there are no users', () => {
+it(`buttons 'show list' and 'enter new user' toggles between UsersList and AddressForm pages`, () => {
 	render(<LandingPage />)
 
 	const showListBtn = screen.getByText(/show list/i)
@@ -14,7 +14,6 @@ it('Pressing button toggles betwen userForm and userList pages, shows message wh
 	const enterUserBtn = screen.getByText(/enter new user/i)
 
 	expect(enterUserBtn).toBeInTheDocument()
-	expect(screen.getByText(/there are no users yet/i)).toBeInTheDocument()
 
 	userEvent.click(enterUserBtn)
 	expect(showListBtn).toBeInTheDocument()
