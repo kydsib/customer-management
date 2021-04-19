@@ -31,12 +31,14 @@ export default function UserDataCard({ user, handleEdit }) {
 				}
 			/>
 
-			<CardContent>
+			<CardContent className={classes.listItem}>
 				<ListItemIcon>
 					<LocationCityIcon />
 				</ListItemIcon>
 				<ListItemText primary={city} />
 				<Typography variant="body2" color="textSecondary"></Typography>
+			</CardContent>
+			<CardContent className={classes.listItem}>
 				<ListItemIcon>
 					<HomeIcon color="action" />
 				</ListItemIcon>
@@ -57,5 +59,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	edit: {
 		marginLeft: 'auto',
+	},
+	listItem: {
+		display: 'flex',
 	},
 }))

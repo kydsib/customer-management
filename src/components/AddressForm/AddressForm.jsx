@@ -1,5 +1,6 @@
 import React from 'react'
 import Alert from '@material-ui/lab/Alert'
+import { makeStyles } from '@material-ui/core/styles'
 
 import CustomInput from '../CustomInput/CustomInput'
 import CustomButton from '../CustomButton/CustomButton'
@@ -18,13 +19,19 @@ const AddressForm = ({ data }) => {
 		isLoading,
 	} = useForm(data)
 
+	const classes = useStyles()
+
 	let errorMsg = error ? errorMessage : ''
 
 	let errorForAlert = errorMessage ? errorMessage : ''
 
 	return (
 		<>
-			<form onSubmit={handleSubmit} autoComplete="off">
+			<form
+				className={classes.form}
+				onSubmit={handleSubmit}
+				autoComplete="off"
+			>
 				<CustomInput
 					handleChange={handleChange}
 					placeHolder="Name and Surname"
@@ -100,3 +107,10 @@ const AddressForm = ({ data }) => {
 }
 
 export default AddressForm
+
+const useStyles = makeStyles(() => ({
+	form: {
+		display: 'flex',
+		flexDirection: 'column',
+	},
+}))

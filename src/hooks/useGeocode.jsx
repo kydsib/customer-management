@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const useGeocode = (address) => {
+	const MY_API_KEY = ''
 	const [isLoading, setIsLoading] = useState(false)
 	const [addressErrorMsg, setAddressErrorMsg] = useState('')
 	const [isAddressValid, setIsAddressValid] = useState(false)
@@ -22,8 +23,6 @@ const useGeocode = (address) => {
 			.replace(charsToRemove, '')
 			.split(' ')
 			.slice(0, -1)
-
-		const MY_API_KEY = 'AIzaSyBomrmX0kILUditS9QOlF5nNOYce-es4n4'
 
 		async function getAdressApproval() {
 			setIsLoading(true)
