@@ -9,5 +9,4 @@ describe('<UsersList />', () => {
 	})
 })
 
-// TODO need to test how user renders
 // TODO test when editing user

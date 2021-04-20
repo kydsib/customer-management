@@ -38,9 +38,6 @@ const LandingPage = () => {
 
 			<CustomButton
 				children={btnText}
-				inputProps={{
-					'data-testid': 'toggle',
-				}}
 				handleClick={() => {
 					setState((prev) => !prev)
 					setEditingUser(false)

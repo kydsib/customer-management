@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import HomeIcon from '@material-ui/icons/Home'
 import LocationCityIcon from '@material-ui/icons/LocationCity'
 import EditIcon from '@material-ui/icons/Edit'
+import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox'
 
 export default function UserDataCard({ user, handleEdit }) {
 	const classes = useStyles()
@@ -42,14 +43,21 @@ export default function UserDataCard({ user, handleEdit }) {
 				<ListItemIcon>
 					<HomeIcon color="action" />
 				</ListItemIcon>
-				<ListItemText primary={`${street} ${houseNo} - ${zip}`} />
+				<ListItemText primary={`${street} ${houseNo}`} />
+				<Typography variant="body2" color="textSecondary"></Typography>
+			</CardContent>
+			<CardContent className={classes.listItem}>
+				<ListItemIcon>
+					<MarkunreadMailboxIcon color="action" />
+				</ListItemIcon>
+				<ListItemText primary={`Zip code - ${zip}`} />
 				<Typography variant="body2" color="textSecondary"></Typography>
 			</CardContent>
 		</Card>
 	)
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	root: {
 		maxWidth: 'auto',
 	},
